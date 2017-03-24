@@ -5,11 +5,44 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.example.administrator.news.WelcomeActivity">
+
     <android.support.v4.view.ViewPager
         android:id="@+id/viewpager"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <!--  通过代码的方式动态加载图片 需要:PagerAdapter -->
     </android.support.v4.view.ViewPager>
+
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="50dp">
+
+        <!--创建线性布局,用来存储灰色的形状,请注意线性布局是不会重叠-->
+        <LinearLayout
+            android:id="@+id/ll"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <!-- 如果在代码中添加动态添加组件
+            <View
+                android:background="@drawable/welcome_point_gray"
+                android:layout_width="30dp"
+                android:layout_height="30dp" />
+             -->
+        </LinearLayout>
+
+        <View
+            android:background="@drawable/welcome_point_red"
+            android:layout_width="40px"
+            android:layout_height="40px"></View>
+
+
+
+    </RelativeLayout>
 
 </RelativeLayout>
