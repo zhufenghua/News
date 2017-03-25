@@ -7,9 +7,11 @@ import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 
 import com.example.administrator.utils.DensityUtils;
 
@@ -20,6 +22,8 @@ public class WelcomeActivity extends Activity {
 
     private ViewPager viewpager;
     private LinearLayout ll;
+    private int pointMoveWidth = 0;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,7 +33,7 @@ public class WelcomeActivity extends Activity {
         initView();
         // 初始化数据
         initData();
-        Log.i("jxy",this.getResources().getDisplayMetrics().density + "");  // 3.0
+        Log.i("jxy", this.getResources().getDisplayMetrics().density + "");  // 3.0
 
     }
 
@@ -37,7 +41,7 @@ public class WelcomeActivity extends Activity {
     protected void onResume() {
         super.onResume();
         // 获取红点移动的距离(两个灰点离左边的距离)
-        Log.i("jxy","0point:" + ll.getChildAt(0).getLeft() + ",1point:" + ll.getChildAt(1).getLeft());
+//        Log.i("jxy","0point:" + ll.getChildAt(0).getLeft() + ",1point:" + ll.getChildAt(1).getLeft());
     }
 
     private void initView() {
@@ -53,14 +57,26 @@ public class WelcomeActivity extends Activity {
             View view = new View(this);
             view.setBackgroundResource(R.drawable.welcome_point_gray);
             // 代码中所有的数字的单位都是像素 px
-            int px = DensityUtils.dpi2px(this,10);
-            LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(px,px);
-            if(i>0){
-                param.leftMargin = DensityUtils.dpi2px(this,5); // 20px
+            int px = DensityUtils.dpi2px(this, 10);
+            LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(px, px);
+            if (i > 0) {
+                param.leftMargin = DensityUtils.dpi2px(this, 5); // 20px
             }
             view.setLayoutParams(param);
             ll.addView(view);
         }
+
+
+        // 通过对Tree观察者监听,可以动态计算移动的距离
+        ll.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                Log.i("jxy", "onGlobalLayout........");
+                Log.i("jxy", "0point:" + ll.getChildAt(0).getLeft() + ",1point:" + ll.getChildAt(1).getLeft());
+                pointMoveWidth = ll.getChildAt(1).getLeft() - ll.getChildAt(0).getLeft();
+                ll.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+            }
+        });
 
         // 注册一个监听页面切换事件
         viewpager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -73,12 +89,22 @@ public class WelcomeActivity extends Activity {
 
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                Log.i("jxy","当前页面的索引:" + position + ",移动距离百分比:" + positionOffset + ",移动的像素:" + positionOffsetPixels);
+                Log.i("jxy", "当前页面的索引:" + position + ",移动距离百分比:" + positionOffset + ",移动的像素:" + positionOffsetPixels);
+                // 获取red_poinrt的组件,并且设置参数
+//                View redPoint = findViewById(R.id.red_point);
+//                RelativeLayout.LayoutParams param = (RelativeLayout.LayoutParams)redPoint.getLayoutParams();
+//                param.leftMargin = (int)(pointMoveWidth * positionOffset) + position * pointMoveWidth;
+//                redPoint.setLayoutParams(param);
+
             }
 
-            @Override
+            @Override  // 切换成功才会执行
             public void onPageSelected(int position) {
-                Log.i("jxy","当前被选择的页面:" + position);
+                Log.i("jxy", "当前被选择的页面:" + position);
+                View redPoint = findViewById(R.id.red_point);
+                RelativeLayout.LayoutParams param = (RelativeLayout.LayoutParams)redPoint.getLayoutParams();
+                param.leftMargin = position * pointMoveWidth;
+                redPoint.setLayoutParams(param);
             }
 
             /**
@@ -87,7 +113,7 @@ public class WelcomeActivity extends Activity {
              */
             @Override
             public void onPageScrollStateChanged(int state) {
-                Log.i("jxy","state:" + state);
+                Log.i("jxy", "state:" + state);
             }
         });
     }
