@@ -38,10 +38,8 @@
 
         <View
             android:background="@drawable/welcome_point_red"
-            android:layout_width="40px"
-            android:layout_height="40px"></View>
-
-
+            android:layout_width="10dp"
+            android:layout_height="10dp"></View>
 
     </RelativeLayout>
 
