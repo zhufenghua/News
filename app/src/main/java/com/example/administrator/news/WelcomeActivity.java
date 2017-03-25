@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -23,6 +24,10 @@ public class WelcomeActivity extends Activity {
     private ViewPager viewpager;
     private LinearLayout ll;
     private int pointMoveWidth = 0;
+    private Button btnStart = null;
+
+    private List<View> iList = null;
+
 
 
     @Override
@@ -37,13 +42,6 @@ public class WelcomeActivity extends Activity {
 
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        // 获取红点移动的距离(两个灰点离左边的距离)
-//        Log.i("jxy","0point:" + ll.getChildAt(0).getLeft() + ",1point:" + ll.getChildAt(1).getLeft());
-    }
-
     private void initView() {
         viewpager = (ViewPager) findViewById(R.id.viewpager);
         ll = (LinearLayout) findViewById(R.id.ll);
@@ -53,7 +51,7 @@ public class WelcomeActivity extends Activity {
         // 给ViewPager适配Item一般都ImageView
         viewpager.setAdapter(new WelcomePage());
         // 动态给线性 布局添加三个小灰点
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < iList.size(); i++) {
             View view = new View(this);
             view.setBackgroundResource(R.drawable.welcome_point_gray);
             // 代码中所有的数字的单位都是像素 px
@@ -120,11 +118,10 @@ public class WelcomeActivity extends Activity {
     private class WelcomePage extends PagerAdapter {
 
         private int[] ids = null;
-        private List<ImageView> iList = null;
 
         public WelcomePage() {
             ids = new int[]{R.drawable.guide_1, R.drawable.guide_2, R.drawable.guide_3};
-            iList = new ArrayList<ImageView>();
+            iList = new ArrayList<View>();
             // 创建一个ListView<ImageView>来存储图片,
             for (int i = 0; i < ids.length; i++) {
                 ImageView imageView = new ImageView(WelcomeActivity.this);
@@ -132,6 +129,7 @@ public class WelcomeActivity extends Activity {
                 imageView.setBackgroundResource(ids[i]);
                 iList.add(imageView);
             }
+            iList.add(View.inflate(WelcomeActivity.this,R.layout.btn_start,null));
         }
 
         @Override  // 返回集合大小
@@ -141,7 +139,7 @@ public class WelcomeActivity extends Activity {
 
         @Override // 实例化没一个Item,其实就是View
         public Object instantiateItem(ViewGroup container, int position) {
-            ImageView view = (ImageView) iList.get(position);
+            View view = (View) iList.get(position);
             Log.i("jxy", "当前的ViewPager对象:" + container + ",position:" + position + ",ImageView:" + view);
             // 返回之前必须把当前View对象添加到容器中
             container.addView(view); // lv.addView(view); 只能使用适配器
@@ -151,7 +149,7 @@ public class WelcomeActivity extends Activity {
         @Override
         public void destroyItem(ViewGroup container, int position, Object object) {
             Log.i("jxy", "当前销毁的对象:" + object);
-            container.removeView((ImageView) object);
+            container.removeView((View) object);
         }
 
         @Override  //

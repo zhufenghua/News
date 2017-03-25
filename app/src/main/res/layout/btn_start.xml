@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_welcome"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/guide_4"
+    tools:context="com.example.administrator.news.WelcomeActivity">
+
+
+    <Button
+        android:textColor="#fff"
+        android:padding="10dp"
+    style="@style/WelcomeButton"
+    android:text="开始体验" />
+
+</RelativeLayout>
