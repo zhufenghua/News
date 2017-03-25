@@ -1,6 +1,7 @@
 package com.example.administrator.news;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -15,6 +16,7 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 
 import com.example.administrator.utils.DensityUtils;
+import com.example.administrator.utils.SharedPreUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +42,16 @@ public class WelcomeActivity extends Activity {
         initData();
         Log.i("jxy", this.getResources().getDisplayMetrics().density + "");  // 3.0
 
+    }
+
+    public void startMainActivity(View view){
+        // 设置欢迎页面已经显示过一次
+        SharedPreUtils.setBoolean(this,"welcome_show",true);
+        Intent intent = new Intent(this,MainActivity.class);
+        // 标准模式在同一个APP中所有Activity都在同一个栈
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
+        // 启动主页面
+        startActivity(intent);
     }
 
     private void initView() {

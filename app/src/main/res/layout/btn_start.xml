@@ -9,9 +9,10 @@
 
 
     <Button
-        android:textColor="#fff"
+        android:onClick="startMainActivity"
+        style="@style/WelcomeButton"
         android:padding="10dp"
-    style="@style/WelcomeButton"
-    android:text="开始体验" />
+        android:text="开始体验"
+        android:textColor="#fff" />
 
 </RelativeLayout>
