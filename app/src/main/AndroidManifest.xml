@@ -2,6 +2,16 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.administrator.news">
 
+    <!--
+         红色按钮的移动实现:
+             1: 测试页面切换的事件:  viewpager.addOnPageChangeListener
+             2: 试图在onResume 中计算移动距离(返回是零)
+             3: 创建MyView测试View的生命周期 (注意重写构造方法)
+             4: 执行: hierarchyviewer.bat (查询APP 布局)
+             5: ll.getViewTreeObserver().addOnGlobalLayoutListener (pointMoveWidth = ll.getChildAt(1).getLeft() - ll.getChildAt(0).getLeft();)
+             6: onPageScrolled 实现移动的功能
+    -->
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"

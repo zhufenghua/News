@@ -91,20 +91,19 @@ public class WelcomeActivity extends Activity {
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
                 Log.i("jxy", "当前页面的索引:" + position + ",移动距离百分比:" + positionOffset + ",移动的像素:" + positionOffsetPixels);
                 // 获取red_poinrt的组件,并且设置参数
-//                View redPoint = findViewById(R.id.red_point);
-//                RelativeLayout.LayoutParams param = (RelativeLayout.LayoutParams)redPoint.getLayoutParams();
-//                param.leftMargin = (int)(pointMoveWidth * positionOffset) + position * pointMoveWidth;
-//                redPoint.setLayoutParams(param);
-
+                View redPoint = findViewById(R.id.red_point);
+                RelativeLayout.LayoutParams param = (RelativeLayout.LayoutParams)redPoint.getLayoutParams();
+                param.leftMargin = (int)(pointMoveWidth * positionOffset) + position * pointMoveWidth;
+                redPoint.setLayoutParams(param);
             }
 
             @Override  // 切换成功才会执行
             public void onPageSelected(int position) {
                 Log.i("jxy", "当前被选择的页面:" + position);
-                View redPoint = findViewById(R.id.red_point);
-                RelativeLayout.LayoutParams param = (RelativeLayout.LayoutParams)redPoint.getLayoutParams();
-                param.leftMargin = position * pointMoveWidth;
-                redPoint.setLayoutParams(param);
+//                View redPoint = findViewById(R.id.red_point);
+//                RelativeLayout.LayoutParams param = (RelativeLayout.LayoutParams)redPoint.getLayoutParams();
+//                param.leftMargin = position * pointMoveWidth;
+//                redPoint.setLayoutParams(param);
             }
 
             /**
