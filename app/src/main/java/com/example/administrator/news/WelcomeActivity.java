@@ -47,9 +47,9 @@ public class WelcomeActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        x.view().inject(this);
 //        setContentView(R.layout.activity_welcome);
         // 事件、组件、布局实现IOC的初始化
-        x.view().inject(this);
         // 绑定组件
 //        initView();
         // 初始化数据
