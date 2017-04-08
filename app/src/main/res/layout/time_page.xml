@@ -33,6 +33,7 @@
     </RelativeLayout>
 
     <ListView
+        android:divider="@null"
         android:id="@+id/listview"
         android:layout_weight="1"
         android:layout_width="match_parent"
