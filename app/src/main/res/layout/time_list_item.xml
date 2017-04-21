@@ -18,6 +18,7 @@
        </View>
 
         <TextView
+            android:id="@+id/txt_time"
             android:textSize="12sp"
             android:padding="5dp"
             android:text="5小时前"
@@ -39,6 +40,7 @@
         android:layout_height="60dp">
         
         <TextView
+            android:id="@+id/txt_title"
             android:layout_width="0dp"
             android:layout_weight="2"
             android:layout_marginRight="5dp"
@@ -46,6 +48,7 @@
             android:layout_height="wrap_content" />
 
         <ImageView
+            android:id="@+id/img_iv"
             android:src="@drawable/time_news_image"
             android:scaleType="fitCenter"
             android:layout_width="0dp"

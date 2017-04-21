@@ -122,6 +122,6 @@ public class IndexActivity extends Activity {
                     startActivity(new Intent(IndexActivity.this, WelcomeActivity.class));
                 }
             }
-        }, 20000);
+        }, 2000);
     }
 }
