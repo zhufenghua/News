@@ -32,13 +32,13 @@
 
     </RelativeLayout>
 
-    <ListView
+    <com.example.administrator.view.ReFreshListView
         android:divider="@null"
         android:id="@+id/listview"
         android:layout_weight="1"
         android:layout_width="match_parent"
         android:layout_height="0dp">
         <!-- 需要自己构建ListItem元素 -->
-    </ListView>
+    </com.example.administrator.view.ReFreshListView>
 
 </LinearLayout>

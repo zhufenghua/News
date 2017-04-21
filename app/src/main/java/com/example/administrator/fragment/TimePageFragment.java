@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -17,6 +18,7 @@ import android.widget.Toast;
 
 import com.example.administrator.model.News;
 import com.example.administrator.news.R;
+import com.example.administrator.view.ReFreshListView;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -28,16 +30,18 @@ import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Fragmet需要添加xml布局文件
  */
 @ContentView(R.layout.time_page)
-public class TimePageFragment extends Fragment {
+public class TimePageFragment extends Fragment {  // 不能单独使用,在运行的时候必须依附Activty
 
     @ViewInject(R.id.listview)  // 需要添加listItem
-    private ListView listview;
+    private ReFreshListView listview;
 
     @Override
     public void onAttach(Context context) {
@@ -63,8 +67,19 @@ public class TimePageFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         Log.i("jxy", this.getClass() + "---->4: onViewCreated");
         // 给listView添加数据(创建适配器),不能直接添加,listview.addView();
-        // 1: 此处应该先发送http请求,如果进入: onSuccess,则说明数据已经获取
+        // 1: 此处应该先发送http请求,如果进入: onSuccess,则说明数据已经获取, 应该创建Service服务(此服务并不是用来播放音乐的,因此应该
+        // bingService的方式,而非startService)
+        getServiceData();
 
+        listview.setRefreshListener(new  ReFreshListView.OnRefreshListener(){
+            @Override
+            public void onRefresh() {
+                getServiceData();  // 重新调用下拉刷新
+            }
+        });
+    }
+
+    public void getServiceData() {
         RequestParams params = new RequestParams("http://hiwbs101083.jsp.jspee.com.cn/NewsServlet");
         // 有搜索框的时候实现
 //        params.addQueryStringParameter("wd", "xUtils");
@@ -74,9 +89,15 @@ public class TimePageFragment extends Fragment {
 //                Toast.makeText(x.app(), result, Toast.LENGTH_LONG).show();
                 // 2: Gson 把string转化为model /map
                 Gson gson = new Gson();
-                final List<News> newsList = gson.fromJson(result, new TypeToken<ArrayList<News>>() {
+//                final List<News> newsList = gson.fromJson(result, new TypeToken<ArrayList<News>>() {
+//                }.getType());
+                Map<String,Object> fromJson = gson.fromJson(result, new TypeToken<HashMap<String,Object>>(){
                 }.getType());
-                Log.i("jxy", "从后台返回的数据为:" + newsList);
+                Log.i("jxy", "从后台返回的数据为:" + fromJson);
+                // 设置最后刷新时间
+                TextView txtLastTime =  (TextView) listview.findViewById(R.id.txt_lastTime);
+                txtLastTime.setText(fromJson.get("sytTime").toString());
+                final List<News> newsList = (List<News>)fromJson.get("newsList");
                 // 对数据进行赋值(List_Item的数据适配)
                 listview.setAdapter(new BaseAdapter() {
                     @Override
@@ -134,7 +155,7 @@ public class TimePageFragment extends Fragment {
 
             @Override
             public void onError(Throwable ex, boolean isOnCallback) {
-                Toast.makeText(x.app(), ex.getMessage(), Toast.LENGTH_LONG).show();
+                Toast.makeText(x.app(), "onError" + ex.getMessage(), Toast.LENGTH_LONG).show();
             }
 
             @Override
@@ -142,15 +163,15 @@ public class TimePageFragment extends Fragment {
                 Toast.makeText(x.app(), "cancelled", Toast.LENGTH_LONG).show();
             }
 
-            @Override
+            @Override  // 只要请求完毕,无论成功还是失败,此方法都会执行
             public void onFinished() {
-
+                    // 下拉刷新完毕
+                    listview.endPulldownToRefresh();
             }
 
         });
-
-
     }
+
 
     @Override
     public void onStart() {
