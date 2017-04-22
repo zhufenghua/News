@@ -17,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.administrator.model.News;
+import com.example.administrator.model.Result;
 import com.example.administrator.news.R;
 import com.example.administrator.view.ReFreshListView;
 import com.google.gson.Gson;
@@ -71,7 +72,7 @@ public class TimePageFragment extends Fragment {  // 不能单独使用,在运�
         // bingService的方式,而非startService)
         getServiceData();
 
-        listview.setRefreshListener(new  ReFreshListView.OnRefreshListener(){
+        listview.setRefreshListener(new ReFreshListView.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 getServiceData();  // 重新调用下拉刷新
@@ -90,14 +91,13 @@ public class TimePageFragment extends Fragment {  // 不能单独使用,在运�
                 // 2: Gson 把string转化为model /map
                 Gson gson = new Gson();
 //                final List<News> newsList = gson.fromJson(result, new TypeToken<ArrayList<News>>() {
-//                }.getType());
-                Map<String,Object> fromJson = gson.fromJson(result, new TypeToken<HashMap<String,Object>>(){
-                }.getType());
+                //                }.getType());
+                Result fromJson = gson.fromJson(result, Result.class);
                 Log.i("jxy", "从后台返回的数据为:" + fromJson);
                 // 设置最后刷新时间
-                TextView txtLastTime =  (TextView) listview.findViewById(R.id.txt_lastTime);
-                txtLastTime.setText(fromJson.get("sytTime").toString());
-                final List<News> newsList = (List<News>)fromJson.get("newsList");
+                TextView txtLastTime = (TextView) listview.findViewById(R.id.txt_lastTime);
+                txtLastTime.setText(fromJson.getSysTime());
+                final List<News> newsList = fromJson.getNewsList();
                 // 对数据进行赋值(List_Item的数据适配)
                 listview.setAdapter(new BaseAdapter() {
                     @Override
@@ -129,7 +129,6 @@ public class TimePageFragment extends Fragment {  // 不能单独使用,在运�
                         News news = (News) getItem(position);
                         txtTitle.setText(news.getTitle());
                         txtTime.setText(news.getDate());
-
                         // 设置加载图片的参数
                         ImageOptions options = new ImageOptions.Builder()
                                 // 是否忽略GIF格式的图片
@@ -165,8 +164,8 @@ public class TimePageFragment extends Fragment {  // 不能单独使用,在运�
 
             @Override  // 只要请求完毕,无论成功还是失败,此方法都会执行
             public void onFinished() {
-                    // 下拉刷新完毕
-                    listview.endPulldownToRefresh();
+                // 下拉刷新完毕
+                listview.endPulldownToRefresh();
             }
 
         });

@@ -38,13 +38,13 @@ public class ReFreshListView extends ListView {
     public ReFreshListView(Context context, AttributeSet attrs) {
         super(context, attrs);
         Log.i("jxy", "ReFreshListView(Context context, AttributeSet attrs)");
-        // 添加头布局文件
+// 添加头布局文件
         headView = View.inflate(this.getContext(), R.layout.time_listview_head, null);
-        // 设置headView的padding,此时需要得到当前headView的真实高度
+// 设置headView的padding,此时需要得到当前headView的真实高度
         headView.measure(0, 0);
         headHeight = headView.getMeasuredHeight();
         headView.setPadding(0, -headHeight, 0, 0);
-        // android:visibility="gone" 此方法不会占据空间,但是不能在根标签中使用
+// android:visibility="gone" 此方法不会占据空间,但是不能在根标签中使用
         this.addHeaderView(headView);
         // 当前headView已经加载listView,因此可以进行属性与事件注入
         x.view().inject(this);
@@ -75,10 +75,10 @@ public class ReFreshListView extends ListView {
                     int paddingY = dy - headHeight;
                     headView.setPadding(0, paddingY, 0, 0);
                     //  paddingY > 0  当前文字显示松开刷新, <0: 文字显示下拉刷新
-                    if(paddingY > 0 && mCurrentState != STATE_RELEASE_REFRESH){
+                    if (paddingY > 0 && mCurrentState != STATE_RELEASE_REFRESH) {
                         mCurrentState = STATE_RELEASE_REFRESH;
                         reFreshState();
-                    }else if(paddingY <= 0 && mCurrentState != STATE_PULL_REFRESH){
+                    } else if (paddingY <= 0 && mCurrentState != STATE_PULL_REFRESH) {
                         mCurrentState = STATE_PULL_REFRESH;
                         reFreshState();
                     }
@@ -87,15 +87,15 @@ public class ReFreshListView extends ListView {
             case MotionEvent.ACTION_UP:
 //                startY = 0; // 还原初始值
                 Log.i("jxy", this.getClass() + "MotionEvent.ACTION_UP");
-                if(mCurrentState == STATE_PULL_REFRESH){
+                if (mCurrentState == STATE_PULL_REFRESH) {
                     // 客户已经取消下拉刷新,head直接隐藏即可
                     headView.setPadding(0, -headHeight, 0, 0);
-                } else if(mCurrentState == STATE_RELEASE_REFRESH){
+                } else if (mCurrentState == STATE_RELEASE_REFRESH) {
                     // 修改成立即刷新,并且去后台服务器获取数据
                     mCurrentState = STATE_REFRESHING;  // 正在加载......
                     headView.setPadding(0, 0, 0, 0);
-                    // 加载后台的数据
-                    if(refreshListener!=null){
+// 加载后台的数据
+                    if (refreshListener != null) {
                         refreshListener.onRefresh();
                     }
                 }
@@ -106,27 +106,28 @@ public class ReFreshListView extends ListView {
     }
 
     private OnRefreshListener refreshListener;
+
     // 使用者通过set方法吧此接口注入
     public void setRefreshListener(OnRefreshListener refreshListener) {
         this.refreshListener = refreshListener;
     }
 
-    // 结束下拉刷新的方法,此方法在远程访问之后,无论http成功还是失败都会执行
-    public void endPulldownToRefresh(){
-        iv.setVisibility(VISIBLE);
-        pb.setVisibility(INVISIBLE);
-        txtPull.setText("下拉刷新");
-        headView.setPadding(0,-headHeight,0,0);
-    }
+// 结束下拉刷新的方法,此方法在远程访问之后,无论http成功还是失败都会执行
+public void endPulldownToRefresh() {
+    iv.setVisibility(VISIBLE);
+    pb.setVisibility(INVISIBLE);
+    txtPull.setText("下拉刷新");
+    headView.setPadding(0, -headHeight, 0, 0);
+}
 
-    public interface OnRefreshListener{
+    public interface OnRefreshListener {
         // 刷新的时候调用的方法
         public void onRefresh();
     }
 
     // 根据不同的状态,修改下拉刷新的文本与图片值
-    private void reFreshState(){
-        switch (mCurrentState){
+    private void reFreshState() {
+        switch (mCurrentState) {
             case STATE_PULL_REFRESH:  // 进度条隐藏,箭头显示, 文字为"下拉刷新"
                 pb.setVisibility(INVISIBLE);
                 iv.setVisibility(VISIBLE);
